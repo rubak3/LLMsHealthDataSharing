@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.18;
 
 import "./DataExchange.sol";
 
 contract ConsentManager {
 
     DataExchange immutable dataSC;
-    uint256 consentId;
+    uint256 consentID;
 
     constructor(address dataSCAddr) {
         dataSC = DataExchange(dataSCAddr);
-        consentId = 0;
+        consentID = 0;
     }
 
     struct GovernmentConsent {
@@ -76,11 +76,11 @@ contract ConsentManager {
             purpose: purposes, 
             receiverAddress: receiverAddress,
             active: true,
-            consentID: consentId,
+            consentID: consentID,
             validUntil: validUntil
         }));
-        emit NewGovernmentConsentAdded(msg.sender, consentId);
-        consentId++;
+        emit NewGovernmentConsentAdded(msg.sender, consentID);
+        consentID++;
     }
 
     function addHospitalConsent(uint256[] memory dataTypes, uint256[] memory purposes, string[] memory receiverLocation, bool anonymityLevel, uint validUntil) public onlyRegisteredUsers {
@@ -90,11 +90,11 @@ contract ConsentManager {
             receiverLocation: receiverLocation,
             anonymityLevel: anonymityLevel, 
             active: true,
-            consentID: consentId,
+            consentID: consentID,
             validUntil: validUntil
         }));
-        emit NewPatientConsentAdded(msg.sender, consentId);
-        consentId++;
+        emit NewPatientConsentAdded(msg.sender, consentID);
+        consentID++;
     }
 
     function addInsuranceConsent(uint256[] memory dataTypes, uint256[] memory purposes, string[] memory receiverLocation, bool anonymityLevel, uint validUntil) public onlyRegisteredUsers {
@@ -104,11 +104,11 @@ contract ConsentManager {
             receiverLocation: receiverLocation,
             anonymityLevel: anonymityLevel, 
             active: true,
-            consentID: consentId,
+            consentID: consentID,
             validUntil: validUntil
         }));
-        emit NewPatientConsentAdded(msg.sender, consentId);
-        consentId++;
+        emit NewPatientConsentAdded(msg.sender, consentID);
+        consentID++;
     }
 
     function addLabConsent(uint256[] memory dataTypes, uint256[] memory purposes, string[] memory receiverLocation, bool anonymityLevel, uint validUntil) public onlyRegisteredUsers {
@@ -118,11 +118,11 @@ contract ConsentManager {
             receiverLocation: receiverLocation,
             anonymityLevel: anonymityLevel, 
             active: true,
-            consentID: consentId,
+            consentID: consentID,
             validUntil: validUntil
         }));
-        emit NewPatientConsentAdded(msg.sender, consentId);
-        consentId++;
+        emit NewPatientConsentAdded(msg.sender, consentID);
+        consentID++;
     }
 
     function addSpecificConsent(address receiver, uint256[] memory dataTypes, uint256[] memory purposes, bool anonymityLevel, uint validUntil) public onlyRegisteredUsers { 
@@ -132,11 +132,11 @@ contract ConsentManager {
             purpose: purposes, 
             anonymityLevel: anonymityLevel, 
             active: true,
-            consentID: consentId,
+            consentID: consentID,
             validUntil: validUntil
         }));
-        emit NewSpecificPatientConsentAdded(msg.sender, receiver, consentId);
-        consentId++;
+        emit NewSpecificPatientConsentAdded(msg.sender, receiver, consentID);
+        consentID++;
     }
 
     function addBroadConsent(uint256[] memory dataTypes, uint256[] memory purposes, string[] memory receiverLocation, bool anonymityLevel, uint validUntil) public onlyRegisteredUsers {
@@ -146,11 +146,11 @@ contract ConsentManager {
             receiverLocation: receiverLocation,
             anonymityLevel: anonymityLevel, 
             active: true,
-            consentID: consentId,
+            consentID: consentID,
             validUntil: validUntil
         }));
-        emit NewPatientConsentAdded(msg.sender, consentId);
-        consentId++;
+        emit NewPatientConsentAdded(msg.sender, consentID);
+        consentID++;
     }
 
 
@@ -182,12 +182,12 @@ contract ConsentManager {
 
 
     // Functions for revoking consents
-    function revokeGovernmentConsent(uint256 _consentId) public onlyRegisteredUsers {
+    function revokeGovernmentConsent(uint256 consentId) public onlyRegisteredUsers {
         require(dataSC.getUserRole(msg.sender) == DataExchange.Role.Government, "Only governments can call this function");
         GovernmentConsent[] storage consents = governmentConsents[msg.sender];
         bool found = false;
         for (uint256 i = 0; i < consents.length; i++) {
-            if (consents[i].consentID == _consentId) {
+            if (consents[i].consentID == consentId) {
                 require(consents[i].active, "This consent is already inactive");
                 consents[i].active = false;
                 found = true;
@@ -197,11 +197,11 @@ contract ConsentManager {
         require(found, "Consent ID not found");
     }
 
-    function revokeHospitalConsent(uint256 _consentId) public onlyRegisteredUsers {
+    function revokeHospitalConsent(uint256 consentId) public onlyRegisteredUsers {
         GeneralConsent[] storage consents = hospitalConsents[msg.sender];
         bool found = false;
         for (uint256 i = 0; i < consents.length; i++) {
-            if (consents[i].consentID == _consentId) {
+            if (consents[i].consentID == consentId) {
                 require(consents[i].active, "This consent is already inactive");
                 consents[i].active = false;
                 found = true;
@@ -211,11 +211,11 @@ contract ConsentManager {
         require(found, "Consent ID not found");
     }
 
-    function revokeInsuranceConsent(uint256 _consentId) public onlyRegisteredUsers {
+    function revokeInsuranceConsent(uint256 consentId) public onlyRegisteredUsers {
         GeneralConsent[] storage consents = insuranceConsents[msg.sender];
         bool found = false;
         for (uint256 i = 0; i < consents.length; i++) {
-            if (consents[i].consentID == _consentId) {
+            if (consents[i].consentID == consentId) {
                 require(consents[i].active, "This consent is already inactive");
                 consents[i].active = false;
                 found = true;
@@ -225,11 +225,11 @@ contract ConsentManager {
         require(found, "Consent ID not found");
     }
 
-    function revokeLabConsent(uint256 _consentId) public onlyRegisteredUsers {
+    function revokeLabConsent(uint256 consentId) public onlyRegisteredUsers {
         GeneralConsent[] storage consents = labConsents[msg.sender];
         bool found = false;
         for (uint256 i = 0; i < consents.length; i++) {
-            if (consents[i].consentID == _consentId) {
+            if (consents[i].consentID == consentId) {
                 require(consents[i].active, "This consent is already inactive");
                 consents[i].active = false;
                 found = true;
@@ -239,11 +239,11 @@ contract ConsentManager {
         require(found, "Consent ID not found");
     }
 
-    function revokeSpecificConsent(uint256 _consentId) public onlyRegisteredUsers {
+    function revokeSpecificConsent(uint256 consentId) public onlyRegisteredUsers {
         SpecificConsent[] storage consents = specificConsents[msg.sender];
         bool found = false;
         for (uint256 i = 0; i < consents.length; i++) {
-            if (consents[i].consentID == _consentId) {
+            if (consents[i].consentID == consentId) {
                 require(consents[i].active, "This consent is already inactive");
                 consents[i].active = false;
                 found = true;
@@ -253,11 +253,11 @@ contract ConsentManager {
         require(found, "Consent ID not found");
     }
 
-    function revokeBroadConsent(uint256 _consentId) public onlyRegisteredUsers {
+    function revokeBroadConsent(uint256 consentId) public onlyRegisteredUsers {
         GeneralConsent[] storage consents = broadConsents[msg.sender];
         bool found = false;
         for (uint256 i = 0; i < consents.length; i++) {
-            if (consents[i].consentID == _consentId) {
+            if (consents[i].consentID == consentId) {
                 require(consents[i].active, "This consent is already inactive");
                 consents[i].active = false;
                 found = true;
