@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
+pragma solidity ^0.8.18;
 
-contract DataExchangeManager {
+contract DataExchange {
     
     enum Role {Patient, Hospital, ResearchLab, InsuranceCompany, Government}
 
